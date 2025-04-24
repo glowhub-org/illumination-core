@@ -62,3 +62,4 @@ illumination-core/
 That’s all—now English readers will instantly grasp what “照度コア (illumination-core)” does.  
 Whenever you update the Japanese part, just mirror the change in this English block. Good luck and ping me anytime you want more polish!
 
+If you have any questions, please feel free to open an Issue or PR. But replies can be slow.
