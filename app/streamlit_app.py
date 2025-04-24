@@ -1,6 +1,6 @@
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from scripts.compute_score import load, calc
+
 import streamlit as st
 import pandas as pd
 from scripts.compute_score import load, calc
