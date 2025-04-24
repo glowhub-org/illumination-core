@@ -1,0 +1,20 @@
+[
+  {
+    "id": "paper001",
+    "title": "Ancient DNA and Population Dynamics",
+    "citations": 120,
+    "external_contradictions": 4
+  },
+  {
+    "id": "paper002",
+    "title": "GIS Simulation of Jomon Migration",
+    "citations": 30,
+    "external_contradictions": 2
+  },
+  {
+    "id": "paper003",
+    "title": "Mythological Convergent Evolution",
+    "citations": 10,
+    "external_contradictions": 6
+  }
+]
