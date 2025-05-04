@@ -55,3 +55,4 @@ illumination-core/
 
 
 If you have any questions, please feel free to open an Issue or PR. But replies can be slow.
+local
