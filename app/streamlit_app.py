@@ -1,3 +1,9 @@
+# --- add upper folder into PYTHONPATH --------------------
+import sys, pathlib
+root = pathlib.Path(__file__).resolve().parent.parent   # = /app
+if str(root) not in sys.path:
+    sys.path.append(str(root))
+# ---------------------------------------------------------
 # --- FastAPI 同居サーバ -------------------------------------------------
 import threading, uvicorn
 from api.main import app as fastapi_app
