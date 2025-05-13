@@ -1,20 +1,20 @@
-# Dockerfile  🚀 “バイナリ込み” マルチステージ
+# Dockerfile  ✅ single‑stage, all packages present
+FROM python:3.12-slim
 
-FROM python:3.12-slim AS builder
 WORKDIR /app
+
+# 1) 依存パッケージをインストール
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-FROM python:3.12-slim
-WORKDIR /app
-# site‑packages + scripts(binaries) の両方をコピー
-COPY --from=builder /usr/local/lib/python*/site-packages /usr/local/lib/python*/site-packages
-COPY --from=builder /usr/local/bin /usr/local/bin
+# 2) アプリコードをコピー
 COPY . .
 
+# 3) 環境変数
 ENV PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app
 
-CMD /bin/sh -c "uvicorn api.main:app --host 0.0.0.0 --port 8000 & \
-                streamlit run app/streamlit_app.py \
-                --server.port 8501 --server.address 0.0.0.0 --server.headless true"
+# 4) FastAPI(8000) と Streamlit(8080) を同時起動
+CMD uvicorn api.main:app --host 0.0.0.0 --port 8000 & \
+    streamlit run app/streamlit_app.py \
+    --server.port 8080 --server.address 0.0.0.0 --server.headless true
