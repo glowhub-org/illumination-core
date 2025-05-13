@@ -1,22 +1,30 @@
-import json, argparse, pandas as pd
+# scripts/compute_score.py  🚀 4‑Axis β
 
-def load(path):
-    with open(path, "r", encoding="utf-8") as f:
-        return pd.read_json(f)
+from typing import Dict
 
-def calc(df, w_c=0.5, w_r=0.5):
-    c_norm = df["citations"] / df["citations"].max()
-    r_norm = df["external_contradictions"] / df["external_contradictions"].max()
-    df["illumination"] = w_c * c_norm + w_r * r_norm
-    return df[["id", "title", "illumination"]]
+# 軸ごとのデフォルト重み
+DEFAULT_WEIGHTS: Dict[str, float] = {
+    "C": 0.35,   # Citation density
+    "R": 0.30,   # External contradiction
+    "U": 0.20,   # Reuse rate
+    "dH": 0.15   # Information gain
+}
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--data", default="data/shadow_sample.json")
-    parser.add_argument("--wc", type=float, default=0.5)
-    parser.add_argument("--wr", type=float, default=0.5)
-    args = parser.parse_args()
+def _normalize(raw: float, max_val: float = 1.0) -> float:
+    """0‑1 正規化（あふれは 1.0 に丸める）"""
+    return min(raw / max_val, 1.0) if max_val else 0.0
 
-    df = load(args.data)
-    out = calc(df, args.wc, args.wr)
-    print(out.to_markdown(index=False))
+def compute_vector(c_raw: float, r_raw: float,
+                   u_raw: float, dh_raw: float,
+                   weights: Dict[str, float] = DEFAULT_WEIGHTS
+                   ) -> Dict[str, Dict]:
+    """
+    4 軸の raw 値を受け取り
+      • 正規化 vec_norm
+      • 合計スコア score
+    を返す
+    """
+    vec_raw = {"C": c_raw, "R": r_raw, "U": u_raw, "dH": dh_raw}
+    vec_norm = {k: _normalize(v) for k, v in vec_raw.items()}
+    score = sum(weights[k] * vec_norm[k] for k in vec_norm)
+    return {"raw": vec_raw, "norm": vec_norm, "score": score}

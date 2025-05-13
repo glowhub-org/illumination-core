@@ -1,20 +1,6 @@
-[
-  {
-    "id": "paper001",
-    "title": "Ancient DNA and Population Dynamics",
-    "citations": 120,
-    "external_contradictions": 4
-  },
-  {
-    "id": "paper002",
-    "title": "GIS Simulation of Jomon Migration",
-    "citations": 30,
-    "external_contradictions": 2
-  },
-  {
-    "id": "paper003",
-    "title": "Mythological Convergent Evolution",
-    "citations": 10,
-    "external_contradictions": 6
-  }
-]
+{
+  "raw":  { "C": 34, "R": 2, "U": 5,  "dH": 0.42 },
+  "norm": { "C": 1.0,"R": 0.25,"U": 0.5,"dH": 0.42 },
+  "score": 0.71
+}
+

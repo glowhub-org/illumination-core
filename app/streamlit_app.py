@@ -1,20 +1,30 @@
-import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+# app/streamlit_app.py  🚀 4‑Axis UI β
 
-import streamlit as st
-import pandas as pd
-from scripts.compute_score import load, calc
+import streamlit as st, requests, json
+import plotly.graph_objects as go
 
-st.title("照度コア α – Illumination Dashboard")
+API_URL = "https://illumination-core.fly.dev"  # ローカルなら http://localhost:8000
 
-df_raw = load("data/shadow_sample.json")
+st.title("Illumination‑Core • 4‑Axis Inspector")
 
-st.sidebar.header("Dial Weights")
-w_c = st.sidebar.slider("C  (Citation density)", 0.0, 1.0, 0.5, 0.05)
-w_r = st.sidebar.slider("R  (External contradiction)", 0.0, 1.0, 0.5, 0.05)
+tab1, tab2 = st.tabs(["URL / DOI", "Raw text"])
 
-df = calc(df_raw.copy(), w_c, w_r)
-st.write("### Illumination Scores")
-st.dataframe(df)
+with tab1:
+    url = st.text_input("Resource URL か DOI を入力")
+    if st.button("Analyze", key="url_btn") and url:
+        res = requests.post(f"{API_URL}/score",
+                            json={"url": url}).json()
+        st.metric("Composite Score", round(res["score"], 3))
+        radar = go.Figure(go.Scatterpolar(
+            r=list(res["norm"].values()),
+            theta=list(res["norm"].keys()), fill='toself'))
+        st.plotly_chart(radar, use_container_width=True)
+        st.json(res)
 
-st.bar_chart(df.set_index("title")["illumination"])
+with tab2:
+    text = st.text_area("貼り付けテキスト（最大〜1万字）", height=200)
+    if st.button("Analyze", key="text_btn") and text:
+        res = requests.post(f"{API_URL}/score_raw",
+                            json={"text": text}).json()
+        st.metric("ΔH (Information gain)", round(res["norm"]["dH"], 3))
+        st.json(res)
