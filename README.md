@@ -3,56 +3,44 @@
 
 > 信頼コストを下げるメタ仕組みを作り、文化圏を横断して配布する。
 
-## 4-Axis Illumination
-- **C** Citation density  
-- **R** External contradiction  
-- **U** Reuse rate  
-- **ΔH** Information gain
-現状はα版
----
+# Illumination Core 🔦
 
-## 🌍 English Overview
+A 4-axis prototype system for visualizing the credibility of academic texts.
 
-### 🎯 Purpose
+## Overview
 
-> **Build a meta-framework that lowers the *cost of trust* and can be shared across cultural and disciplinary borders.**  
-> The system makes “shadows” (un-examined gaps, missing replications, one-sided citations) visible and adjustable.
+Illumination Core allows users to evaluate documents (via DOI or raw text) along four independent axes:
 
-### 🔧 4-Axis Illumination Model
+- **C** — Citation density  
+- **R** — Contradictions (e.g. refuting/supporting citations)  
+- **U** — Reuse across other texts or codebases  
+- **ΔH** — Information novelty (entropy shift)
 
-| Axis | Symbol | What it measures | Typical source |
-|------|--------|------------------|----------------|
-| Citation density | **C** | How often the work is cited | OpenAlex, CrossRef |
-| External contradiction | **R** | How many *contrasting* citations or critiques exist | scite.ai, citation-intent models |
-| Reuse rate | **U** | How frequently methods / data are reused in later work | text-embedding similarity |
-| Information gain | **ΔH** | Novelty or KL-divergence of claims vs. prior knowledge | LLM claim extraction |
+The scores are rendered as radar charts and can be interactively weighted via sliders.
 
-### 🚀 Quick Start
+## Technologies
+
+- **Frontend**: [Streamlit](https://streamlit.io/) UI with slider-controlled weight adjustment  
+- **Backend**: [FastAPI](https://fastapi.tiangolo.com/) endpoint for score computation  
+- **Data sources**:  
+  - OpenAlex for citation metadata  
+  - Scite.ai (planned or conditional access)
+- **Hosting**: [Fly.io](https://fly.io/)
+
+## Purpose
+
+This is an **educational, non-commercial prototype** exploring methods for visualizing trust and credibility in academic research.
+
+> ⚠ This project is **not affiliated with Scite.ai** or any third-party data provider.  
+> API access is either provisional or pending approval where applicable.
+
+## Usage
+
+To test locally:
 
 ```bash
-# clone & enter repo
-git clone https://github.com/tasuku-9/illumination-core.git
-cd illumination-core
+# backend
+uvicorn api.main:app --reload
 
-# install deps (Python ≥3.9)
-pip install -r requirements.txt
-
-# launch dashboard
+# frontend
 streamlit run app/streamlit_app.py
-
-illumination-core/
-│
-├─ app/                  ← Streamlit UI
-│   ├─ streamlit_app.py
-│   └─ data/             ← demo data JSON
-├─ scripts/              ← score calculation & future NLP pipelines
-│   ├─ __init__.py
-│   └─ compute_score.py
-├─ docs/                 ← design notes, screenshots
-├─ requirements.txt
-└─ README.md
-
-
-
-If you have any questions, please feel free to open an Issue or PR. But replies can be slow.
-local
