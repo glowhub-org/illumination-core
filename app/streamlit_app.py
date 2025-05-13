@@ -1,9 +1,15 @@
+# --- FastAPI 同居サーバ -------------------------------------------------
+import threading, uvicorn
+from api.main import app as fastapi_app
+def run_api(): uvicorn.run(fastapi_app, host="0.0.0.0", port=8000, log_level="error")
+threading.Thread(target=run_api, daemon=True).start()
+# -----------------------------------------------------------------------
 # app/streamlit_app.py  🚀 4‑Axis UI β
 
 import streamlit as st, requests, json
 import plotly.graph_objects as go
 
-API_URL = "https://illumination-core.fly.dev"  # ローカルなら http://localhost:8000
+API_URL = "http://localhost:8000"              # ← 必ず localhost:8000 に
 
 st.title("Illumination‑Core • 4‑Axis Inspector")
 
