@@ -33,6 +33,32 @@ This is an **educational, non-commercial prototype** exploring methods for visua
 > ⚠ This project is **not affiliated with Scite.ai** or any third-party data provider.  
 > API access is either provisional or pending approval where applicable.
 
+## 💡 Philosophy: Not a Score, but a Light
+
+Illumination Core does not assign a fixed score to academic work.
+
+Instead, it offers a flexible, reader-driven **4-axis radar** where each dimension (Citation, Contradiction, Reuse, Information Gain) can be **weighted interactively via sliders**.
+
+This design reflects a key belief:
+
+> **Knowledge is not judged absolutely, but interpreted contextually.**
+
+The score is not a verdict — it’s a **lens** the reader can adjust to reflect their inquiry.
+
+---
+
+## 💡 開発理念：「点数」ではなく「照明」
+
+照度コアは、論文に一律の点数をつけるためのツールではありません。
+
+そのかわり、読者自身が **4つの軸（C・R・U・ΔH）** の重みをスライダーで調整できる「**多次元の照明装置**」として設計されています。
+
+これは、以下のような理念に基づいています：
+
+> **知は絶対評価されるべきものではなく、文脈に応じて解釈されるものである。**
+
+スコアは「結論」ではなく、読み手の問いに合わせて焦点を変えられる「**レンズ**」です。
+
 ## Usage
 
 To test locally:
