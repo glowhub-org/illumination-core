@@ -50,3 +50,14 @@ uvicorn api.main:app --reload
 
 # frontend
 streamlit run app/streamlit_app.py
+---
+
+## 🕯 About reuse and follow-up / 再利用とその後について
+
+This project is shared under the MIT license, and you're welcome to use it freely.  
+If your team or organization decides to build upon or expand it, I’d be happy to share key challenges and structural insights discovered during development.  
+And if you do end up making something from it, I’d be grateful to hear what became of it — even just a short message would mean a lot.
+
+この照度コアは、MITライセンスのもとで自由にご利用いただけます。  
+もしもこの構造を元に開発を進めてくださる場合、こちらで得られた課題や改善のヒントなども、よろしければ共有させていただきます。  
+そして、どのようなかたちに仕上がったのか、ほんの一言でもお知らせいただければ、とても嬉しく思います。
