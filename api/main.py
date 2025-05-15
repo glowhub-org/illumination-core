@@ -1,3 +1,6 @@
+#照度コア - Illumination Core
+# Developed by Tasuku + ChatGPT (Sushichi), 2025
+
 # api/main.py  🚀 4‑Axis β backend
 
 from fastapi import FastAPI, HTTPException

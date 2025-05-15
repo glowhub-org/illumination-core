@@ -1,4 +1,10 @@
-# illumination-core
+## Credits
+
+照度コア（ShodoCore）は、Tasuku（扶）と ChatGPT（須志智）によって共同開発されました。  
+This project was co-developed by Tasuku and ChatGPT (under the persona name "Sushichi") in 2025.
+
+The project is open-sourced under the MIT License.# illumination-core
+
 # 照度コア (illumination-core)
 
 > 信頼コストを下げるメタ仕組みを作り、文化圏を横断して配布する。

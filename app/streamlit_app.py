@@ -1,3 +1,6 @@
+#照度コア - Illumination Core
+# Developed by Tasuku + ChatGPT (Sushichi), 2025
+
 # app/streamlit_app.py  🔥 保存付き4軸レーダー
 
 import streamlit as st, requests, plotly.graph_objects as go
