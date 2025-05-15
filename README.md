@@ -16,6 +16,14 @@ Illumination Core allows users to evaluate documents (via DOI or raw text) along
 - **ΔH** — Information novelty（新規性・情報利得）
 
 The scores are rendered as radar charts and can be interactively weighted via sliders.
+※ Note: Illumination Core does not currently support full-text search or document recommendation.  
+It is designed to evaluate documents provided by the user (via DOI or pasted text).  
+Future versions may include search and filtering tools based on custom illumination profiles.
+
+※ 現時点では、照度コアには論文の検索・推薦機能は搭載されていません。  
+ユーザーが指定した DOI または本文に対して照度分析を行う構成となっています。  
+将来的には、照度設定に応じた論文検索やランキング機能の追加も検討中です。
+
 
 ## Technologies
 
@@ -32,6 +40,30 @@ This is an **educational, non-commercial prototype** exploring methods for visua
 
 > ⚠ This project is **not affiliated with Scite.ai** or any third-party data provider.  
 > API access is either provisional or pending approval where applicable.
+
+Beyond evaluation, Illumination Core can also serve as a cognitive tool for academic exploration and creative thinking.
+
+By adjusting the axis weights, users can shift the focus depending on their current intellectual mode:
+
+- **Focused reading**: emphasize ΔH (novelty) to discover new ideas
+- **Reliability-oriented**: emphasize C (citations) and U (reuse) to find well-established work
+- **Brainstorming / creative synthesis**: emphasize ΔH and U to locate high-potential, reusable research
+- **Critical review**: emphasize R (contradictions) to explore points of tension in the field
+
+In this way, the system acts not as a judgment engine, but as a **personalizable lens for thought**, adaptable to your current cognitive needs.
+
+---
+
+照度コアは単なる評価ツールではなく、学術的な探究や創造的思考のための**認知補助ツール**としても活用できます。
+
+ユーザー自身の知的モードに応じて軸の重みを調整することで、論文の“照らし方”を変えることができます：
+
+- **集中して読みたいとき**：ΔH（新規性）を強調して、新たな着想を得る
+- **信頼性重視のとき**：C（引用密度）とU（再利用）を強めにして、定評ある研究にアクセスする
+- **発想モードのとき**：ΔHとUを上げて、応用可能性や再構成しやすい研究を拾う
+- **批判的レビューや議論整理のとき**：R（反証や矛盾）を強調して、分野内の緊張点を掘り起こす
+
+このように照度コアは、「読む価値」を押しつけるのではなく、「どう読みたいか」に合わせて灯を調整できる**柔軟な思考のレンズ**です。
 
 ## 💡 Philosophy: Not a Score, but a Light
 
