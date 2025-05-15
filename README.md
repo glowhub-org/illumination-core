@@ -1,10 +1,3 @@
-## Credits
-
-照度コア（ShodoCore）は、Tasuku（扶）と ChatGPT（須志智）によって共同開発されました。  
-This project was co-developed by Tasuku and ChatGPT (under the persona name "Sushichi") in 2025.
-
-The project is open-sourced under the MIT License.# illumination-core
-
 # 照度コア (illumination-core)
 
 > 信頼コストを下げるメタ仕組みを作り、文化圏を横断して配布する。
@@ -17,10 +10,10 @@ A 4-axis prototype system for visualizing the credibility of academic texts.
 
 Illumination Core allows users to evaluate documents (via DOI or raw text) along four independent axes:
 
-- **C** — Citation density  
-- **R** — Contradictions (e.g. refuting/supporting citations)  
-- **U** — Reuse across other texts or codebases  
-- **ΔH** — Information novelty (entropy shift)
+- **C** — Citation density（影響力の指標）  
+- **R** — Contradiction stance（賛否の構造：refuting/supporting）※R is pending integration  
+- **U** — Reuse frequency（他文献・コードでの再利用）  
+- **ΔH** — Information novelty（新規性・情報利得）
 
 The scores are rendered as radar charts and can be interactively weighted via sliders.
 
@@ -61,3 +54,9 @@ And if you do end up making something from it, I’d be grateful to hear what be
 この照度コアは、MITライセンスのもとで自由にご利用いただけます。  
 もしもこの構造を元に開発を進めてくださる場合、こちらで得られた課題や改善のヒントなども、よろしければ共有させていただきます。  
 そして、どのようなかたちに仕上がったのか、ほんの一言でもお知らせいただければ、とても嬉しく思います。
+## Credits
+
+照度コア（ShodoCore）は、Tasuku（扶）と ChatGPT（須志智）によって共同開発されました。  
+This project was co-developed by Tasuku and ChatGPT (under the persona name "Sushichi") in 2025.
+
+The project is open-sourced under the MIT License.# illumination-core
