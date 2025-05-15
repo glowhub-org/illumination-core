@@ -1,22 +1,21 @@
-import json, argparse, pandas as pd
+# scripts/compute_score.py
 
-def load(path):
-    with open(path, "r", encoding="utf-8") as f:
-        return pd.read_json(f)
+import numpy as np
+from typing import Dict
 
-def calc(df, w_c=0.5, w_r=0.5):
-    c_norm = df["citations"] / df["citations"].max()
-    r_norm = df["external_contradictions"] / df["external_contradictions"].max()
-    df["illumination"] = w_c * c_norm + w_r * r_norm
-    return df[["id", "title", "illumination"]]
+DEFAULT_WEIGHTS: Dict[str, float] = {
+    "C": 0.25,
+    "R": 0.25,
+    "U": 0.25,
+    "dH": 0.25
+}
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--data", default="data/shadow_sample.json")
-    parser.add_argument("--wc", type=float, default=0.5)
-    parser.add_argument("--wr", type=float, default=0.5)
-    args = parser.parse_args()
-
-    df = load(args.data)
-    out = calc(df, args.wc, args.wr)
-    print(out.to_markdown(index=False))
+def compute_vector(c, r, u, dh, weights: Dict[str, float] = DEFAULT_WEIGHTS):
+    norm = {
+        "C": np.tanh(c / 100),
+        "R": np.tanh(r / 10),
+        "U": np.tanh(u / 50),
+        "dH": np.tanh(dh / 2),
+    }
+    score = sum(weights[k] * norm[k] for k in norm)
+    return {"score": score, "norm": norm}

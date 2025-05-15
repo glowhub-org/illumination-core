@@ -1,0 +1,11 @@
+All rights reserved.
+
+This repository is part of an independent, non-commercial educational project.
+
+You may view or fork the code for personal or academic use only.  
+Commercial use, redistribution, or public deployment without prior written consent is prohibited.
+
+This project is not affiliated with scite.ai or other data providers.
+Any data integration is provisional or subject to external agreements.
+
+Copyright (c) 2025 tas9 meka (with collaborative AI)
