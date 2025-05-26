@@ -5,6 +5,12 @@
 
 import streamlit as st, requests, plotly.graph_objects as go
 from scripts.compute_score import compute_vector
+# --- make repo root importable --------------------------------------
+import pathlib, sys
+root = pathlib.Path(__file__).resolve().parent.parent  # <- リポジトリ直下
+if str(root) not in sys.path:
+    sys.path.append(str(root))
+# --------------------------------------------------------------------
 
 API_URL = "http://localhost:8000"
 
