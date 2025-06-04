@@ -1,134 +1,103 @@
-#照度コア - Illumination Core
+# 照度コア - Illumination Core
 # Developed by Tasuku + ChatGPT (Sushichi), 2025
 
-# app/streamlit_app.py  🔥 保存付き4軸レーダー
+# app/streamlit_app.py  🔥 保存付き5軸レーダー
 
 import streamlit as st, requests, plotly.graph_objects as go
-from scripts.compute_score import compute_vector
-# --- make repo root importable --------------------------------------
+# ------------------------------------------------------------
+# repo 直下を import パスに追加
 import pathlib, sys
-root = pathlib.Path(__file__).resolve().parent.parent  # <- リポジトリ直下
+root = pathlib.Path(__file__).resolve().parent.parent
 if str(root) not in sys.path:
     sys.path.append(str(root))
-# --------------------------------------------------------------------
+# ------------------------------------------------------------
+from scripts.compute_score import compute_vector
 
-API_URL = "http://localhost:8000"
+API_URL = "http://localhost:8000"   # ← ローカル開発用
 
-st.title("Illumination‑Core • 4‑Axis Inspector")
+st.title("Illumination-Core • 5-Axis Inspector")
 
-# 🔧 ユーザーが軸の重みをスライダーで操作
+# ──────────────────────────────────────
+# 軸ウェイト（S はまだ合成に入れない）
 st.sidebar.markdown("### 軸の重みを調整")
-
 weights = {
-    "C": st.sidebar.slider("Citation (C)", 0.0, 1.0, 0.25),
-    "R": st.sidebar.slider("Contradiction (R)", 0.0, 1.0, 0.25),
-    "U": st.sidebar.slider("Reuse (U)", 0.0, 1.0, 0.25),
+    "C":  st.sidebar.slider("Citation (C)",        0.0, 1.0, 0.25),
+    "R":  st.sidebar.slider("Contradiction (R)",   0.0, 1.0, 0.25),
+    "U":  st.sidebar.slider("Reuse (U)",           0.0, 1.0, 0.25),
     "dH": st.sidebar.slider("Information Gain (ΔH)", 0.0, 1.0, 0.25),
 }
-# 正規化（合計1に）
 total = sum(weights.values())
-weights = {k: v/total if total > 0 else 0 for k, v in weights.items()}
+weights = {k: v/total if total else 0 for k, v in weights.items()}
 
-tab1, tab2 = st.tabs(["URL / DOI", "Raw text"])
+tab_url, tab_text = st.tabs(["URL / DOI", "Raw text"])
 
 def call_api(payload: dict):
     r = requests.post(f"{API_URL}/score", json=payload, timeout=30)
     r.raise_for_status()
     return r.json()
 
-# ========== 📄 URL / DOI タブ ================
-with tab1:
+# ========== URL / DOI ==========
+with tab_url:
     url = st.text_input("Resource URL か DOI を入力")
 
     if st.button("Analyze") and url:
         try:
             res = call_api({"url": url})
-            st.session_state["last_url"] = url
-            st.session_state["last_result_url"] = res
+            st.session_state["url_res"] = res
         except Exception as e:
             st.error(f"API error: {e}")
 
-    # 結果表示（保存されていれば）
-    if "last_result_url" in st.session_state:
-        res = st.session_state["last_result_url"]
-        score_result = compute_vector(
-            res["norm"]["C"], res["norm"]["R"], res["norm"]["U"], res["norm"]["dH"],
+    if "url_res" in st.session_state:
+        res = st.session_state["url_res"]
+
+        # 4 軸合成スコア
+        score = compute_vector(
+            res["norm"]["C"], res["norm"]["R"],
+            res["norm"]["U"], res["norm"]["dH"],
             weights=weights
         )
-        st.metric("Composite Score", round(score_result["score"], 3))
-        st.text(f"影 (S): {res['raw']['S']:.2f}") # Display S value
+        st.metric("Composite Score", round(score["score"], 3))
+        st.write(f"影 (S): **{res['raw']['S']:.2f}**")
 
-        # Prepare for radar chart
-        theta_values = ["C", "R", "U", "ΔH", "S"]
-        # Use norm values from the API response 'res' for the radar chart for accuracy
-        r_values = [
-            res["norm"]["C"],
-            res["norm"]["R"],
-            res["norm"]["U"],
-            res["norm"]["dH"],
+        # 5 軸レーダー
+        theta = ["C", "R", "U", "ΔH", "S"]
+        r_vals = [
+            res["norm"]["C"], res["norm"]["R"],
+            res["norm"]["U"], res["norm"]["dH"],
             res["norm"]["S"]
         ]
-
-        # Define colors for radar chart sectors
-        radar_colors = ['#1f77b4',  # Muted Blue (Plotly default blue)
-                        '#ff7f0e',  # Safety Orange (Plotly default orange)
-                        '#2ca02c',  # Cooked Asparagus Green (Plotly default green)
-                        '#d62728',  # Brick Red (Plotly default red)
-                        'grey']     # Grey for S
-
         radar = go.Figure(go.Scatterpolar(
-            r=r_values,
-            theta=theta_values,
-            fill='toself',
-            marker=dict(colors=radar_colors) # Specify colors for each sector
+            r=r_vals, theta=theta, fill='toself',
+            line=dict(color='rgba(150,150,150,0.5)')
         ))
         st.plotly_chart(radar, use_container_width=True)
-        st.json(res) # Show the full API response
+        st.json(res)
 
-# ========== ✍ Raw Text タブ ================
-with tab2:
+# ========== Raw text ==========
+with tab_text:
     text = st.text_area("貼り付けテキスト（最大1万字）", height=200)
 
     if st.button("Analyze Text") and text:
         try:
             res = call_api({"text": text})
-            st.session_state["last_text"] = text
-            st.session_state["last_result_text"] = res
+            st.session_state["text_res"] = res
         except Exception as e:
             st.error(f"API error: {e}")
 
-    if "last_result_text" in st.session_state:
-        res = st.session_state["last_result_text"]
-        score_result = compute_vector(
-            res["norm"]["C"], res["norm"]["R"], res["norm"]["U"], res["norm"]["dH"],
-            weights=weights
-        )
-        st.metric("ΔH only", round(score_result["norm"]["dH"], 3))
-        st.text(f"影 (S): {res['raw']['S']:.2f}") # Display S value
+    if "text_res" in st.session_state:
+        res = st.session_state["text_res"]
+        st.metric("ΔH (raw)", round(res["raw"]["dH"], 3))
+        st.write(f"影 (S): **{res['raw']['S']:.2f}**")
 
-        # Prepare for radar chart
-        theta_values = ["C", "R", "U", "ΔH", "S"]
-        # Use norm values from the API response 'res' for the radar chart for accuracy
-        r_values = [
-            res["norm"]["C"],
-            res["norm"]["R"],
-            res["norm"]["U"],
-            res["norm"]["dH"],
+        theta = ["C", "R", "U", "ΔH", "S"]
+        r_vals = [
+            res["norm"]["C"], res["norm"]["R"],
+            res["norm"]["U"], res["norm"]["dH"],
             res["norm"]["S"]
         ]
-
-        # Define colors for radar chart sectors
-        radar_colors = ['#1f77b4',  # Muted Blue (Plotly default blue)
-                        '#ff7f0e',  # Safety Orange (Plotly default orange)
-                        '#2ca02c',  # Cooked Asparagus Green (Plotly default green)
-                        '#d62728',  # Brick Red (Plotly default red)
-                        'grey']     # Grey for S
-
         radar = go.Figure(go.Scatterpolar(
-            r=r_values,
-            theta=theta_values,
-            fill='toself',
-            marker=dict(colors=radar_colors) # Specify colors for each sector
+            r=r_vals, theta=theta, fill='toself',
+            line=dict(color='rgba(150,150,150,0.5)')
         ))
         st.plotly_chart(radar, use_container_width=True)
-        st.json(res) # Show the full API response
+        st.json(res)
