@@ -1,51 +1,29 @@
-import numpy as np
-from typing import Dict
+# scripts/compute_score.py
+# ---------------------------------------------------------------
+# 4  + 影ベクトル S を返すユーティリティ
 
-DEFAULT_WEIGHTS: Dict[str, float] = {
-    "C": 0.25,
-    "R": 0.25,
-    "U": 0.25,
-    "dH": 0.25
-}
+def _normalize(v: dict) -> dict:
+    """各軸値を 0-1 に線形正規化（最大値=1）"""
+    vmax = max(v.values()) or 1
+    return {k: x / vmax for k, x in v.items()}
 
-def compute_vector(c, r, u, dh, weights: Dict[str, float] = DEFAULT_WEIGHTS):
-    # Calculate normalized values for C, R, U, dH
-    norm_c = np.tanh(c / 100)
-    norm_r = np.tanh(r / 10)
-    norm_u = np.tanh(u / 50)
-    norm_dh = np.tanh(dh / 2)
+def compute_vector(c: int, r: int, u: int, dh: float, *, weights: dict | None = None):
+    """
+    4軸 + 影 S を計算して dict で返す
+      - raw  : 入力そのまま & S_raw
+      - norm : 0-1 正規化値 & S_norm (=S_raw)
+      - score: C,R,U,ΔH の合成スコア（S は合成に含めない）
+    """
+    raw = {"C": c, "R": r, "U": u, "dH": dh}
 
-    # Store them in a dictionary for easier access
-    current_norm_values = {
-        "C": norm_c,
-        "R": norm_r,
-        "U": norm_u,
-        "dH": norm_dh
-    }
+    # ---------- 影ベクトル SRaw = 1 - max(正規化C,R,U,ΔH) ----------
+    norm4 = _normalize(raw)
+    s_raw = 1 - max(norm4.values())
+    raw["S"]  = s_raw
+    norm4["S"] = s_raw          # すでに 0-1 範囲なのでそのまま
 
-    # Calculate S_raw from the normalized values of C, R, U, dH
-    # Ensure S is not negative (it shouldn't be if norms are >=0 and max is used correctly)
-    s_value = 1 - max(current_norm_values.values())
-    s_value = max(0, s_value) # Ensure non-negativity, just in case
+    # ---------- 合成スコア（Sを除く4軸） ----------
+    w = weights or {"C": .25, "R": .25, "U": .25, "dH": .25}
+    score = sum(norm4[k] * w.get(k, 0) for k in ("C", "R", "U", "dH"))
 
-    # The composite score is calculated using only C, R, U, dH and their weights
-    # Iterate over the keys present in the input `weights` dictionary
-    score = sum(weights[key] * current_norm_values[key] for key in weights if key in current_norm_values)
-
-    return {
-        "score": score,
-        "norm": {
-            "C": norm_c,
-            "R": norm_r,
-            "U": norm_u,
-            "dH": norm_dh,
-            "S": s_value  # S is already normalized (0-1 range)
-        },
-        "raw": { # Store original inputs and the new S value
-            "C": c,
-            "R": r,
-            "U": u,
-            "dH": dh,
-            "S": s_value
-        }
-    }
+    return {"score": score, "raw": raw, "norm": norm4}
