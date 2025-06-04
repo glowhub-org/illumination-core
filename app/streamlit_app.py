@@ -56,12 +56,34 @@ with tab1:
             weights=weights
         )
         st.metric("Composite Score", round(score_result["score"], 3))
+        st.text(f"影 (S): {res['raw']['S']:.2f}") # Display S value
+
+        # Prepare for radar chart
+        theta_values = ["C", "R", "U", "ΔH", "S"]
+        # Use norm values from the API response 'res' for the radar chart for accuracy
+        r_values = [
+            res["norm"]["C"],
+            res["norm"]["R"],
+            res["norm"]["U"],
+            res["norm"]["dH"],
+            res["norm"]["S"]
+        ]
+
+        # Define colors for radar chart sectors
+        radar_colors = ['#1f77b4',  # Muted Blue (Plotly default blue)
+                        '#ff7f0e',  # Safety Orange (Plotly default orange)
+                        '#2ca02c',  # Cooked Asparagus Green (Plotly default green)
+                        '#d62728',  # Brick Red (Plotly default red)
+                        'grey']     # Grey for S
+
         radar = go.Figure(go.Scatterpolar(
-            r=list(score_result["norm"].values()),
-            theta=list(score_result["norm"].keys()),
-            fill='toself'))
+            r=r_values,
+            theta=theta_values,
+            fill='toself',
+            marker=dict(colors=radar_colors) # Specify colors for each sector
+        ))
         st.plotly_chart(radar, use_container_width=True)
-        st.json(score_result)
+        st.json(res) # Show the full API response
 
 # ========== ✍ Raw Text タブ ================
 with tab2:
@@ -82,9 +104,31 @@ with tab2:
             weights=weights
         )
         st.metric("ΔH only", round(score_result["norm"]["dH"], 3))
+        st.text(f"影 (S): {res['raw']['S']:.2f}") # Display S value
+
+        # Prepare for radar chart
+        theta_values = ["C", "R", "U", "ΔH", "S"]
+        # Use norm values from the API response 'res' for the radar chart for accuracy
+        r_values = [
+            res["norm"]["C"],
+            res["norm"]["R"],
+            res["norm"]["U"],
+            res["norm"]["dH"],
+            res["norm"]["S"]
+        ]
+
+        # Define colors for radar chart sectors
+        radar_colors = ['#1f77b4',  # Muted Blue (Plotly default blue)
+                        '#ff7f0e',  # Safety Orange (Plotly default orange)
+                        '#2ca02c',  # Cooked Asparagus Green (Plotly default green)
+                        '#d62728',  # Brick Red (Plotly default red)
+                        'grey']     # Grey for S
+
         radar = go.Figure(go.Scatterpolar(
-            r=list(score_result["norm"].values()),
-            theta=list(score_result["norm"].keys()),
-            fill='toself'))
+            r=r_values,
+            theta=theta_values,
+            fill='toself',
+            marker=dict(colors=radar_colors) # Specify colors for each sector
+        ))
         st.plotly_chart(radar, use_container_width=True)
-        st.json(score_result)
+        st.json(res) # Show the full API response
